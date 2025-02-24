@@ -1,0 +1,128 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+// Abstract class representing a saleable item
+abstract class SaleableItem {
+    protected double price;
+
+    public SaleableItem(double price) {
+        this.price = price;
+    }
+
+    public abstract double calculateTotal();
+}
+
+// Concrete class for phone sales
+class PhoneSale extends SaleableItem {
+    private int quantity;
+
+    public PhoneSale(double price, int quantity) {
+        super(price);
+        this.quantity = quantity;
+    }
+
+    @Override
+    public double calculateTotal() {
+        return price * quantity;
+    }
+}
+
+// Concrete class for repair services
+class RepairService extends SaleableItem {
+    private int hours;
+
+    public RepairService(double price, int hours) {
+        super(price);
+        this.hours = hours;
+    }
+
+    @Override
+    public double calculateTotal() {
+        return price * hours;
+    }
+}
+
+public class DailySalesCalculator {
+    public static void main(String[] args) {
+        // Create frame
+        JFrame frame = new JFrame("Daily Sales Calculator");
+        frame.setSize(400, 350);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(new BorderLayout());
+
+        // Create main panel with sky blue background
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(5, 2, 10, 10));
+        panel.setBackground(new Color(135, 206, 250)); // Sky blue
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
+        // Labels and input fields
+        JLabel phoneLabel = new JLabel("Phones Sold:");
+        JTextField phoneQuantityField = new JTextField();
+        JLabel phonePriceLabel = new JLabel("Price per Phone (₱):");
+        JTextField phonePriceField = new JTextField("500");
+
+        JLabel repairLabel = new JLabel("Repair Hours:");
+        JTextField repairHoursField = new JTextField();
+        JLabel repairPriceLabel = new JLabel("Price per Hour (₱):");
+        JTextField repairPriceField = new JTextField("50");
+
+        JTextArea resultArea = new JTextArea();
+        resultArea.setEditable(false);
+        resultArea.setBackground(Color.WHITE);
+
+        // Button panel for centering the button at the bottom
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setBackground(new Color(135, 206, 250)); // Sky blue
+        JButton calculateButton = new JButton("Calculate Sales");
+        buttonPanel.add(calculateButton);
+
+        // Add components to panel
+        panel.add(phoneLabel);
+        panel.add(phoneQuantityField);
+        panel.add(phonePriceLabel);
+        panel.add(phonePriceField);
+        panel.add(repairLabel);
+        panel.add(repairHoursField);
+        panel.add(repairPriceLabel);
+        panel.add(repairPriceField);
+        panel.add(resultArea);
+
+        // Add panels to frame
+        frame.add(panel, BorderLayout.CENTER);
+        frame.add(buttonPanel, BorderLayout.SOUTH);
+
+        // Button action
+        calculateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    // Get input values
+                    int phoneQuantity = Integer.parseInt(phoneQuantityField.getText());
+                    double phonePrice = Double.parseDouble(phonePriceField.getText());
+                    int repairHours = Integer.parseInt(repairHoursField.getText());
+                    double repairPrice = Double.parseDouble(repairPriceField.getText());
+
+                    // Create instances of concrete classes
+                    PhoneSale phoneSale = new PhoneSale(phonePrice, phoneQuantity);
+                    RepairService repairService = new RepairService(repairPrice, repairHours);
+
+                    // Calculate total sales
+                    double phoneTotal = phoneSale.calculateTotal();
+                    double repairTotal = repairService.calculateTotal();
+
+                    // Display results
+                    resultArea.setText("Total Sales:\n" +
+                            "Phones: ₱" + phoneTotal + "\n" +
+                            "Repairs: ₱" + repairTotal);
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(frame, "Please enter valid numeric values.", "Input Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+        frame.setVisible(true);
+    }
+}
