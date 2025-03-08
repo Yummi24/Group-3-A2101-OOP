@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="489.0" prefWidth="751.0" style="-fx-background-color: #203A77;" stylesheets="@../../../Login.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+   <left>
+      <AnchorPane prefHeight="428.0" prefWidth="250.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 20PX;" BorderPane.alignment="CENTER">
+         <children>
+            <AnchorPane layoutY="65.0">
+               <children>
+                  <ImageView fitHeight="361.0" fitWidth="305.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../MotorPH/MOTORPH_LOGO-removebg-preview.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </AnchorPane>
+         </children>
+      </AnchorPane>
+   </left>
+   <right>
+      <AnchorPane prefHeight="489.0" prefWidth="447.0" BorderPane.alignment="CENTER">
+         <children>
+            <TextField layoutX="131.0" layoutY="186.0" prefHeight="27.0" prefWidth="295.0" />
+            <Text fill="WHITE" layoutX="14.0" layoutY="207.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LOGIN" wrappingWidth="63.0224609375">
+               <font>
+                  <Font name="Gill Sans MT" size="20.0" />
+               </font>
+            </Text>
+            <TextField layoutX="131.0" layoutY="246.0" prefHeight="27.0" prefWidth="295.0" />
+            <Text fill="WHITE" layoutX="11.0" layoutY="266.0" strokeType="OUTSIDE" strokeWidth="0.0" text="PASSWORD" wrappingWidth="110.0224609375">
+               <font>
+                  <Font name="Gill Sans MT" size="20.0" />
+               </font>
+            </Text>
+            <Button id="login-btn" layoutX="112.0" layoutY="365.0" mnemonicParsing="false" prefHeight="16.0" prefWidth="222.0" style="-fx-background-color: #5075C5; -fx-background-radius: 25px;" stylesheets="@../../../Login.css" text="Button" textFill="#eeeeee">
+               <font>
+                  <Font name="Gill Sans MT Bold" size="16.0" />
+               </font>
+               <effect>
+                  <DropShadow />
+               </effect>
+            </Button>
+            <Button id="login-btn" layoutX="177.0" layoutY="73.0" mnemonicParsing="false" styleClass="login-btn" stylesheets="@../../../Login.css" text="Button" />
+         </children>
+      </AnchorPane>
+   </right>
+</BorderPane>

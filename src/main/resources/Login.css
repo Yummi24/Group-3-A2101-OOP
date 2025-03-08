@@ -1,0 +1,29 @@
+
+#login-btn {
+     width: 100%;
+     padding: 10px;
+     background-color: #4c74b9;
+     color: white;
+     border: none;
+     border-radius: 5px;
+     font-size: 16px;
+     cursor: pointer;
+     margin-top: 10px;
+     text-align: center;
+     display: inline-block;
+ }
+
+ .login-btn:hover {
+     background-color: #3a5a9a;
+ }
+
+ #logo-section {
+     width: 40%;
+     background-color: white;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     padding: 20px;
+     border-top-right-radius: 20px;  /* Rounded top-right */
+     border-bottom-right-radius: 20px; /* Rounded bottom-right */
+ }
