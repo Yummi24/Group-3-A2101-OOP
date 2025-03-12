@@ -16,9 +16,8 @@ public class Main extends Application {
         Parent root = fxmlLoader.load();
         Scene scene = new Scene(root, 751, 450);
 
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("Login.css")).toExternalForm());
 
-        String css = Objects.requireNonNull(getClass().getResource("/Login.css")).toExternalForm();
-        scene.getStylesheets().add(css);
 
         stage.setTitle("MotorPH Login");
         stage.setScene(scene);
