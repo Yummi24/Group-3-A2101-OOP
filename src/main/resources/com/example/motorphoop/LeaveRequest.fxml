@@ -105,21 +105,26 @@
                <content>
                   <VBox fx:id="EmployeelistContainer" prefHeight="496.0" prefWidth="921.0">
                      <children>
-                        <HBox prefHeight="51.0" prefWidth="587.0">
+                        <HBox prefHeight="51.0" prefWidth="587.0" styleClass="employee-entry" stylesheets="@Login.css">
                            <children>
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="  ID :" wrappingWidth="80.9814453125">
                                  <font>
                                     <Font name="Gill Sans MT" size="16.0" />
                                  </font></Text>
                               <ImageView fitHeight="53.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true" />
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Name : " wrappingWidth="279.9814453125">
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Name : " wrappingWidth="225.9814453125">
                                  <font>
                                     <Font name="Gill Sans MT" size="16.0" />
                                  </font></Text>
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Position : " wrappingWidth="216.9814453125">
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Position : " wrappingWidth="180.9814453125">
                                  <font>
                                     <Font name="Gill Sans MT" size="16.0" />
                                  </font></Text>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Status :" wrappingWidth="216.9814453125">
+                                 <font>
+                                    <Font name="Gill Sans MT" size="16.0" />
+                                 </font>
+                              </Text>
                            </children>
                         </HBox>
                      </children>
@@ -133,12 +138,17 @@
                         <Font name="Gill Sans MT" size="20.0" />
                      </font>
                   </Text>
-                  <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Name" wrappingWidth="275.9814453125">
+                  <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Name" wrappingWidth="225.9814453125">
                      <font>
                         <Font name="Gill Sans MT" size="20.0" />
                      </font>
                   </Text>
-                  <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Position" wrappingWidth="80.9814453125">
+                  <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Position" wrappingWidth="176.9814453125">
+                     <font>
+                        <Font name="Gill Sans MT" size="20.0" />
+                     </font>
+                  </Text>
+                  <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Approval" wrappingWidth="80.9814453125">
                      <font>
                         <Font name="Gill Sans MT" size="20.0" />
                      </font>

@@ -90,3 +90,77 @@
     -fx-text-fill: #7a7a7a;
     -fx-font-size: 12px;
 }
+
+/* Container Styling */
+.container {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #003366;
+    -fx-border-width: 2px;
+    -fx-border-radius: 10px;
+    -fx-padding: 15px;
+
+}
+
+/* Header Section */
+.header {
+    -fx-background-color: #e6f0ff;
+    -fx-border-color: #003366;
+    -fx-border-width: 2px;
+    -fx-border-radius: 10px;
+    -fx-padding: 10px;
+}
+
+.header .profile-info {
+    -fx-font-weight: bold;
+    -fx-text-fill: #003366;
+    -fx-font-size: 14px;
+}
+
+.status-logged-in {
+    -fx-background-color: #28a745;
+    -fx-text-fill: #ffffff;
+    -fx-border-radius: 15px;
+    -fx-padding: 5px 15px;
+}
+
+.button-edit {
+    -fx-background-color: #ffc107;
+    -fx-text-fill: #333333;
+    -fx-border-radius: 15px;
+    -fx-padding: 5px 15px;
+}
+
+.button-payslip {
+    -fx-background-color: #007bff;
+    -fx-text-fill: #ffffff;
+    -fx-border-radius: 15px;
+    -fx-padding: 5px 15px;
+}
+
+/* Employee Personal Information */
+.info-section {
+    -fx-background-color: #003366;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 10px;
+    -fx-border-radius: 8px;
+}
+
+.info-box {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #003366;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-padding: 10px;
+    -fx-spacing: 10px;
+}
+
+/* Label Styling */
+.label-title {
+    -fx-font-weight: bold;
+    -fx-text-fill: #003366;
+}
+
+.label-content {
+    -fx-text-fill: #000000;
+}
