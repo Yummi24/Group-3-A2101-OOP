@@ -36,6 +36,8 @@ public class EmployeeDetailsController {
     @FXML private Button OTrequest;
     @FXML private Button Timestamp;
     @FXML private Button Logout;
+    @FXML private Button Payslip;
+    @FXML private Button Edit;
 
     // Display Employee Details
     public void displayEmployeeDetails(
@@ -75,6 +77,14 @@ public class EmployeeDetailsController {
     @FXML
     private void handleTimeStamps(ActionEvent event) throws IOException {
         switchScene(event, "TimeStamp.fxml");
+    }
+    @FXML
+    private void handlePayslip(ActionEvent event) throws IOException {
+        switchScene(event, "Payslip.fxml");
+    }
+    @FXML
+    private void handleEdit(ActionEvent event) throws IOException {
+        switchScene(event, "EmployeeEDIT.fxml");
     }
 
     @FXML

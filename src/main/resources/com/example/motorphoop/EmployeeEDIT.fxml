@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -9,7 +10,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="1000.0" stylesheets="@Login.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.motorphoop.EmployeeDetailsController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="1000.0" stylesheets="@Login.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.motorphoop.EditEmployeeController">
    <left>
       <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #203A77; -fx-background-radius: 0px 15px 15px 0px;" BorderPane.alignment="CENTER">
          <children>
@@ -99,21 +100,23 @@
             </ImageView>
             <AnchorPane layoutX="22.0" layoutY="73.0" prefHeight="78.0" prefWidth="396.0" styleClass="employee-entry" stylesheets="@Login.css">
                <children>
-                  <Text fx:id="nameLabel" layoutX="14.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name : " wrappingWidth="233.27490234375">
+                  <Text fx:id="nameLabel" layoutX="8.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name : " wrappingWidth="61.27490234375">
                      <font>
                         <Font name="Gill Sans MT Bold Italic" size="16.0" />
                      </font>
                   </Text>
-                  <Text fx:id="positionLabel" layoutX="14.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Position: " wrappingWidth="233.27490234375">
+                  <Text fx:id="positionLabel" layoutX="8.0" layoutY="62.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Position: " wrappingWidth="71.27490234375">
                      <font>
                         <Font name="Gill Sans MT Bold Italic" size="16.0" />
                      </font>
                   </Text>
-                  <Text fx:id="idLabel" layoutX="273.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ID :" wrappingWidth="108.27490234375">
+                  <Text fx:id="idLabel" layoutX="297.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ID :" wrappingWidth="84.27490234375">
                      <font>
                         <Font name="Gill Sans MT Bold Italic" size="16.0" />
                      </font>
                   </Text>
+                  <TextField layoutX="69.0" layoutY="9.0" prefHeight="27.0" prefWidth="217.0" />
+                  <TextField layoutX="79.0" layoutY="43.0" prefHeight="3.0" prefWidth="225.0" />
                </children>
             </AnchorPane>
             <Button fx:id="Edit" layoutX="578.0" layoutY="73.0" mnemonicParsing="false" onAction="#handleEdit" prefHeight="34.0" prefWidth="188.0" styleClass="button-edit" stylesheets="@Login.css" text="Edit" />
@@ -137,7 +140,7 @@
                   </Text>
                </children>
             </AnchorPane>
-            <AnchorPane layoutX="22.0" layoutY="201.0" prefHeight="332.0" prefWidth="744.0" styleClass="container">
+            <AnchorPane layoutX="22.0" layoutY="203.0" prefHeight="332.0" prefWidth="744.0" styleClass="container">
                <children>
                   <Text fx:id="supervisorLabel" layoutX="14.0" layoutY="41.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Immediate Supervisor : " wrappingWidth="307.02734375">
                      <font>
@@ -145,51 +148,61 @@
                      </font>
                   </Text>
                   <Line endX="100.0" layoutX="272.0" layoutY="15.0" startX="100.0" startY="281.0" />
-                  <Text layoutX="14.0" layoutY="83.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Status  : " wrappingWidth="307.02734375">
+                  <Text layoutX="14.0" layoutY="99.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Status  : " wrappingWidth="307.02734375">
                      <font>
                         <Font name="Gill Sans MT Bold Italic" size="16.0" />
                      </font>
                   </Text>
-                  <Text fx:id="phoneLabel" layoutX="14.0" layoutY="132.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Phone Number : " wrappingWidth="307.02734375">
+                  <Text fx:id="phoneLabel" layoutX="14.0" layoutY="158.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Phone Number : " wrappingWidth="307.02734375">
                      <font>
                         <Font name="Gill Sans MT Bold Italic" size="16.0" />
                      </font>
                   </Text>
-                  <Text fx:id="birthdayLabel" layoutX="14.0" layoutY="180.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Birthday : " wrappingWidth="307.02734375">
+                  <Text fx:id="birthdayLabel" layoutX="14.0" layoutY="216.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Birthday : " wrappingWidth="307.02734375">
                      <font>
                         <Font name="Gill Sans MT Bold Italic" size="16.0" />
                      </font>
                   </Text>
-                  <Text fx:id="addressLabel" layoutX="14.0" layoutY="228.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Address : " wrappingWidth="307.02734375">
+                  <Text fx:id="addressLabel" layoutX="14.0" layoutY="277.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Address : " wrappingWidth="307.02734375">
                      <font>
                         <Font name="Gill Sans MT Bold Italic" size="16.0" />
                      </font>
                   </Text>
-                  <Text fx:id="tinLabel" layoutX="382.0" layoutY="48.0" strokeType="OUTSIDE" strokeWidth="0.0" text="TIN :" wrappingWidth="307.02734375">
+                  <Text fx:id="tinLabel" layoutX="382.0" layoutY="41.0" strokeType="OUTSIDE" strokeWidth="0.0" text="TIN :" wrappingWidth="307.02734375">
                      <font>
                         <Font name="Gill Sans MT Bold Italic" size="16.0" />
                      </font>
                   </Text>
-                  <Text fx:id="sssLabel" layoutX="382.0" layoutY="90.0" strokeType="OUTSIDE" strokeWidth="0.0" text="SSS :" wrappingWidth="307.02734375">
+                  <Text fx:id="sssLabel" layoutX="382.0" layoutY="99.0" strokeType="OUTSIDE" strokeWidth="0.0" text="SSS :" wrappingWidth="307.02734375">
                      <font>
                         <Font name="Gill Sans MT Bold Italic" size="16.0" />
                      </font>
                   </Text>
-                  <Text fx:id="pagibigLabel" layoutX="382.0" layoutY="139.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pag-Ibig :" wrappingWidth="307.02734375">
+                  <Text fx:id="pagibigLabel" layoutX="382.0" layoutY="158.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pag-Ibig :" wrappingWidth="307.02734375">
                      <font>
                         <Font name="Gill Sans MT Bold Italic" size="16.0" />
                      </font>
                   </Text>
-                  <Text fx:id="philhealthLabel" layoutX="382.0" layoutY="187.0" strokeType="OUTSIDE" strokeWidth="0.0" text="PhilHealth :" wrappingWidth="307.02734375">
+                  <Text fx:id="philhealthLabel" layoutX="382.0" layoutY="216.0" strokeType="OUTSIDE" strokeWidth="0.0" text="PhilHealth :" wrappingWidth="307.02734375">
                      <font>
                         <Font name="Gill Sans MT Bold Italic" size="16.0" />
                      </font>
                   </Text>
-                  <Text layoutX="382.0" layoutY="235.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Emergency No# :" wrappingWidth="307.02734375">
+                  <Text layoutX="382.0" layoutY="277.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Emergency No# :" wrappingWidth="307.02734375">
                      <font>
                         <Font name="Gill Sans MT Bold Italic" size="16.0" />
                      </font>
                   </Text>
+                  <TextField layoutX="23.0" layoutY="52.0" prefHeight="27.0" prefWidth="321.0" />
+                  <TextField layoutX="23.0" layoutY="111.0" prefHeight="27.0" prefWidth="321.0" />
+                  <TextField layoutX="23.0" layoutY="167.0" prefHeight="27.0" prefWidth="321.0" />
+                  <TextField layoutX="23.0" layoutY="226.0" prefHeight="27.0" prefWidth="321.0" />
+                  <TextField layoutX="23.0" layoutY="283.0" prefHeight="27.0" prefWidth="321.0" />
+                  <TextField layoutX="388.0" layoutY="52.0" prefHeight="27.0" prefWidth="321.0" />
+                  <TextField layoutX="388.0" layoutY="111.0" prefHeight="27.0" prefWidth="321.0" />
+                  <TextField layoutX="388.0" layoutY="167.0" prefHeight="27.0" prefWidth="321.0" />
+                  <TextField layoutX="388.0" layoutY="226.0" prefHeight="27.0" prefWidth="321.0" />
+                  <TextField layoutX="388.0" layoutY="283.0" prefHeight="27.0" prefWidth="321.0" />
                </children>
             </AnchorPane>
          </children>
