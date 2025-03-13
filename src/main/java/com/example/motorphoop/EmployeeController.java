@@ -31,46 +31,41 @@ public class EmployeeController {
         loadEmployeeData();
     }
 
+    // Load Employee Data from CSV using HashMap
     private void loadEmployeeData() {
         try (BufferedReader br = new BufferedReader(new FileReader("src/Employees.csv"))) {
-            String headerLine = br.readLine();  // Read header line
-            if (headerLine == null) {
-                System.out.println("Error: CSV file is empty.");
-                return;
-            }
-
-            String[] headers = headerLine.split(",");
-            Map<String, Integer> columnIndex = new HashMap<>();
-            for (int i = 0; i < headers.length; i++) {
-                columnIndex.put(headers[i].trim(), i);
-            }
-
             String line;
+            boolean skipHeader = true;
+
             while ((line = br.readLine()) != null) {
+                if (skipHeader) {
+                    skipHeader = false;
+                    continue;
+                }
+
                 String[] details = line.split(",");
+                if (details.length >= 19) {
+                    Map<String, String> employeeData = new HashMap<>();
+                    employeeData.put("ID", details[0].trim());
+                    employeeData.put("Name", details[2].trim() + " " + details[1].trim());
+                    employeeData.put("Birthday", details[3].trim());
+                    employeeData.put("Address", details[4].trim());
+                    employeeData.put("Phone", details[5].trim());
+                    employeeData.put("SSS", details[6].trim());
+                    employeeData.put("PhilHealth", details[7].trim());
+                    employeeData.put("TIN", details[8].trim());
+                    employeeData.put("Pagibig", details[9].trim());
+                    employeeData.put("Position", details[12].trim());
+                    employeeData.put("Supervisor", details[13].trim());
 
-                if (details.length >= headers.length) {
-                    String id = details[columnIndex.get("Employee #")].trim();
-                    String name = details[columnIndex.get("First Name")].trim() + " " +
-                            details[columnIndex.get("Last Name")].trim();
-                    String position = details[columnIndex.get("Position")].trim();
-
-                    HBox employeeEntry = createEmployeeEntry(id, name, position);
-                    employeeEntry.setOnMouseClicked(event ->
-                            showEmployeeDetails(
-                                    id, name,
-                                    details[columnIndex.get("Birthday")].trim(),
-                                    details[columnIndex.get("Address")].trim(),
-                                    details[columnIndex.get("Phone Number")].trim(),
-                                    details[columnIndex.get("SSS #")].trim(),
-                                    details[columnIndex.get("Philhealth #")].trim(),
-                                    details[columnIndex.get("TIN #")].trim(),
-                                    details[columnIndex.get("Pag-ibig #")].trim(),
-                                    position,
-                                    details[columnIndex.get("Immediate Supervisor")].trim()
-                            )
+                    // Create Employee Entry (only ID, Name, Position shown)
+                    HBox employeeEntry = createEmployeeEntry(
+                            employeeData.get("ID"),
+                            employeeData.get("Name"),
+                            employeeData.get("Position")
                     );
 
+                    employeeEntry.setOnMouseClicked(event -> showEmployeeDetails(employeeData));
                     employeeListContainer.getChildren().add(employeeEntry);
                 }
             }
@@ -79,8 +74,6 @@ public class EmployeeController {
             System.out.println("Error reading CSV file.");
         }
     }
-
-
 
     // Create Clickable Employee Entries
     private HBox createEmployeeEntry(String id, String name, String position) {
@@ -92,19 +85,29 @@ public class EmployeeController {
         Label positionLabel = new Label("Position: " + position);
 
         hbox.getChildren().addAll(idLabel, nameLabel, positionLabel);
-
         return hbox;
     }
 
     // Show Employee Details Page
-    private void showEmployeeDetails(String id, String name, String birthday, String address, String phone,
-                                     String sss, String philhealth, String tin, String pagibig, String position, String supervisor) {
+    private void showEmployeeDetails(Map<String, String> employeeData) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("EmployeeDetails.fxml"));
             Parent root = loader.load();
 
             EmployeeDetailsController controller = loader.getController();
-            controller.displayEmployeeDetails(id, name, birthday, address, phone, sss, philhealth, tin, pagibig, position, supervisor);
+            controller.displayEmployeeDetails(
+                    employeeData.get("ID"),
+                    employeeData.get("Name"),
+                    employeeData.getOrDefault("Birthday", "N/A"),
+                    employeeData.getOrDefault("Address", "N/A"),
+                    employeeData.getOrDefault("Phone", "N/A"),
+                    employeeData.getOrDefault("SSS", "N/A"),
+                    employeeData.getOrDefault("PhilHealth", "N/A"),
+                    employeeData.getOrDefault("TIN", "N/A"),
+                    employeeData.getOrDefault("Pagibig", "N/A"),
+                    employeeData.get("Position"),
+                    employeeData.getOrDefault("Supervisor", "N/A")
+            );
 
             Stage stage = (Stage) scrollPane.getScene().getWindow();
             stage.setScene(new Scene(root));
