@@ -6,95 +6,101 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.*;
 import java.util.*;
-
 
 public class PayslipController {
 
     private Stage stage;
     private Scene scene;
     private Parent root;
-    @FXML private ScrollPane scrollPane;
-    @FXML private VBox employeeListContainer;
-    @FXML private Button Employees, Leaverequest, OTrequest, Timestamp, Logout, Edit, Payslip;
+
+    @FXML private Button Employees, Leaverequest, OTrequest, Timestamp, Logout, Edit, Payslip, Calculate;
+
+    @FXML private Text employeeNameLabel;
+    @FXML private Text employeePositionLabel;
+    @FXML private Text employeeIDLabel;
     @FXML private TextArea payslipTextArea;
 
+    // Employee data storage
+    private Map<String, String> selectedEmployee;
 
+    // Display Payslip Receipt
     @FXML
     public void displayPayslipReceipt() {
-        String payslipReceipt = generatePayslipReceipt();
+        if (selectedEmployee == null) {
+            payslipTextArea.setText("Please select an employee first.");
+            return;
+        }
+
+        String payslipReceipt = generatePayslipReceipt(selectedEmployee);
         payslipTextArea.setText(payslipReceipt);
     }
 
-    private String generatePayslipReceipt() {
+    // Generate Payslip Details
+    private String generatePayslipReceipt(Map<String, String> employeeData) {
         StringBuilder receipt = new StringBuilder();
+
+        double basicSalary = Double.parseDouble(employeeData.get("Basic Salary"));
+        double riceSubsidy = Double.parseDouble(employeeData.get("Rice Subsidy"));
+        double phoneAllowance = Double.parseDouble(employeeData.get("Phone Allowance"));
+        double clothingAllowance = Double.parseDouble(employeeData.get("Clothing Allowance"));
+
+        double grossIncome = basicSalary;
+        double totalBenefits = riceSubsidy + phoneAllowance + clothingAllowance;
+        double totalDeductions = 2300.00;
+        double netIncome = grossIncome + totalBenefits - totalDeductions;
 
         // Header
         receipt.append("====================================\n");
         receipt.append("            MOTORPH PAYSLIP        \n");
         receipt.append("====================================\n");
-        receipt.append("Employee ID: 15\n");
-        receipt.append("Name       : Romualdez, Fredrick\n");
-        receipt.append("Position   : Account Manager / Accounting\n");
+        receipt.append("Employee ID: ").append(employeeData.get("ID")).append("\n");
+        receipt.append("Name       : ").append(employeeData.get("Name")).append("\n");
+        receipt.append("Position   : ").append(employeeData.get("Position")).append("\n");
         receipt.append("====================================\n");
 
         // Earnings
         receipt.append("             EARNINGS               \n");
         receipt.append("------------------------------------\n");
-        receipt.append(String.format(" %-20s %10s \n", "Monthly Rate", "₱35,000"));
-        receipt.append(String.format(" %-20s %10s \n", "Daily Rate", "₱1,250"));
-        receipt.append(String.format(" %-20s %10s \n", "Days Worked", "10"));
-        receipt.append(String.format(" %-20s %10s \n", "Overtime", "₱0"));
+        receipt.append(String.format(" %-20s %10.2f \n", "Basic Salary", basicSalary));
         receipt.append("------------------------------------\n");
-        receipt.append(String.format(" %-20s %10s \n", "GROSS INCOME", "₱26,750"));
+        receipt.append(String.format(" %-20s %10.2f \n", "GROSS INCOME", grossIncome));
         receipt.append("====================================\n");
 
         // Benefits
         receipt.append("             BENEFITS               \n");
         receipt.append("------------------------------------\n");
-        receipt.append(String.format(" %-20s %10s \n", "Rice Subsidy", "₱1,500"));
-        receipt.append(String.format(" %-20s %10s \n", "Phone Allowance", "₱2,000"));
-        receipt.append(String.format(" %-20s %10s \n", "Clothing Allowance", "₱2,000"));
+        receipt.append(String.format(" %-20s %10.2f \n", "Rice Subsidy", riceSubsidy));
+        receipt.append(String.format(" %-20s %10.2f \n", "Phone Allowance", phoneAllowance));
+        receipt.append(String.format(" %-20s %10.2f \n", "Clothing Allowance", clothingAllowance));
         receipt.append("------------------------------------\n");
-        receipt.append(String.format(" %-20s %10s \n", "TOTAL BENEFITS", "₱4,500"));
+        receipt.append(String.format(" %-20s %10.2f \n", "TOTAL BENEFITS", totalBenefits));
         receipt.append("====================================\n");
 
         // Deductions
         receipt.append("             DEDUCTIONS             \n");
         receipt.append("------------------------------------\n");
-        receipt.append(String.format(" %-20s %10s \n", "SSS", "₱900"));
-        receipt.append(String.format(" %-20s %10s \n", "PhilHealth", "₱300"));
-        receipt.append(String.format(" %-20s %10s \n", "Pag-IBIG", "₱100"));
-        receipt.append(String.format(" %-20s %10s \n", "Withholding Tax", "₱1,000"));
-        receipt.append("------------------------------------\n");
-        receipt.append(String.format(" %-20s %10s \n", "TOTAL DEDUCTIONS", "₱2,300"));
+        receipt.append(String.format(" %-20s %10.2f \n", "TOTAL DEDUCTIONS", totalDeductions));
         receipt.append("====================================\n");
 
         // Summary
         receipt.append("             SUMMARY                 \n");
         receipt.append("------------------------------------\n");
-        receipt.append(String.format(" %-20s %10s \n", "Gross Income", "₱26,750"));
-        receipt.append(String.format(" %-20s %10s \n", "Total Benefits", "₱4,500"));
-        receipt.append(String.format(" %-20s %10s \n", "Total Deductions", "₱2,300"));
-        receipt.append("------------------------------------\n");
-        receipt.append(String.format(" %-20s %10s \n", "NET INCOME", "₱28,950"));
+        receipt.append(String.format(" %-20s %10.2f \n", "Gross Income", grossIncome));
+        receipt.append(String.format(" %-20s %10.2f \n", "Total Benefits", totalBenefits));
+        receipt.append(String.format(" %-20s %10.2f \n", "Net Income", netIncome));
         receipt.append("====================================\n");
 
         return receipt.toString();
     }
 
-
-    @FXML
-    private void handleEmployees(ActionEvent event) throws IOException { switchScene(event, "Employee.fxml"); }
+    // Navigation Methods
+    @FXML private void handleEmployees(ActionEvent event) throws IOException { switchScene(event, "Employee.fxml"); }
     @FXML private void handleLeaveRequests(ActionEvent event) throws IOException { switchScene(event, "LeaveRequest.fxml"); }
     @FXML private void handleOTRequests(ActionEvent event) throws IOException { switchScene(event, "OTRequest.fxml"); }
     @FXML private void handleTimeStamps(ActionEvent event) throws IOException { switchScene(event, "TimeStamp.fxml"); }
@@ -125,4 +131,3 @@ public class PayslipController {
         stage.show();
     }
 }
-

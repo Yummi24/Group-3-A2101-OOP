@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -100,26 +101,26 @@
             </ImageView>
             <AnchorPane layoutX="22.0" layoutY="73.0" prefHeight="78.0" prefWidth="396.0" styleClass="employee-entry" stylesheets="@Login.css">
                <children>
-                  <Text fx:id="nameLabel" layoutX="14.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name : " wrappingWidth="233.27490234375">
+                  <Text fx:id="employeeNameLabel" layoutX="14.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name : " wrappingWidth="233.27490234375">
                      <font>
                         <Font name="Gill Sans MT Bold Italic" size="16.0" />
                      </font>
                   </Text>
-                  <Text fx:id="positionLabel" layoutX="14.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Position: " wrappingWidth="233.27490234375">
+                  <Text fx:id="employeePositionLabel" layoutX="14.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Position: " wrappingWidth="233.27490234375">
                      <font>
                         <Font name="Gill Sans MT Bold Italic" size="16.0" />
                      </font>
                   </Text>
-                  <Text fx:id="idLabel" layoutX="273.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ID :" wrappingWidth="108.27490234375">
+                  <Text fx:id="employeeIDLabel" layoutX="273.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ID :" wrappingWidth="108.27490234375">
                      <font>
                         <Font name="Gill Sans MT Bold Italic" size="16.0" />
                      </font>
                   </Text>
                </children>
             </AnchorPane>
-            <Button fx:id="Edit" layoutX="578.0" layoutY="73.0" mnemonicParsing="false" onAction="#handleEdit" prefHeight="34.0" prefWidth="188.0" styleClass="button-edit" stylesheets="@Login.css" text="Edit" />
-            <Button layoutX="578.0" layoutY="116.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="188.0" styleClass="button-payslip" stylesheets="@Login.css" text="Payslip" />
-            <Text layoutX="431.0" layoutY="95.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="status-logged-in" text="Status : Logged In" textAlignment="CENTER" wrappingWidth="118.9814453125">
+            <Button fx:id="Calculate" layoutX="578.0" layoutY="73.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="188.0" styleClass="button-edit" stylesheets="@Login.css" text="Calculate" />
+            <Button layoutX="578.0" layoutY="116.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="188.0" styleClass="button-payslip" stylesheets="@Login.css" text="Generate" />
+            <Text layoutX="431.0" layoutY="95.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="status-logged-in" text="days worked :" textAlignment="CENTER" wrappingWidth="118.9814453125">
                <font>
                   <Font name="Gill Sans MT Bold Italic" size="16.0" />
                </font>
@@ -140,7 +141,11 @@
             </AnchorPane>
             <AnchorPane layoutX="22.0" layoutY="201.0" prefHeight="332.0" prefWidth="744.0" styleClass="container">
                <children>
-                  <TextArea fx:id="payslipTextArea" layoutX="172.0" layoutY="66.0" prefHeight="332.0" prefWidth="744.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <ScrollPane layoutX="211.0" layoutY="31.0" prefHeight="332.0" prefWidth="744.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <content>
+                        <TextArea fx:id="payslipTextArea" prefHeight="624.0" prefWidth="698.0" />
+                     </content>
+                  </ScrollPane>
                </children></AnchorPane>
          </children>
       </AnchorPane>
