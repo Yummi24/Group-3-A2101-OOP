@@ -6,15 +6,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.control.ScrollPane;
 import javafx.stage.Stage;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EmployeeController {
 
@@ -22,16 +23,31 @@ public class EmployeeController {
     private Scene scene;
     private Parent root;
 
-    @FXML private ScrollPane scrollPane;
     @FXML private VBox employeeListContainer;
-    @FXML private Button Employees, Leaverequest, OTrequest, Timestamp, Logout;
+
+    private List<Employee> employees = new ArrayList<>();
 
     @FXML
     public void initialize() {
         loadEmployeeData();
     }
 
-    // Load Employee Data from CSV using HashMap
+    private static class Employee {
+        private final String id;
+        private final String name;
+        private final String position;
+
+        public Employee(String id, String name, String position) {
+            this.id = id;
+            this.name = name;
+            this.position = position;
+        }
+
+        public String getId() { return id; }
+        public String getName() { return name; }
+        public String getPosition() { return position; }
+    }
+
     private void loadEmployeeData() {
         try (BufferedReader br = new BufferedReader(new FileReader("src/Employees.csv"))) {
             String line;
@@ -44,107 +60,79 @@ public class EmployeeController {
                 }
 
                 String[] details = line.split(",");
-                if (details.length >= 19) {
-                    Map<String, String> employeeData = new HashMap<>();
-                    employeeData.put("ID", details[0].trim());
-                    employeeData.put("Name", details[2].trim() + " " + details[1].trim());
-                    employeeData.put("Birthday", details[3].trim());
-                    employeeData.put("Address", details[4].trim());
-                    employeeData.put("Phone", details[5].trim());
-                    employeeData.put("SSS", details[6].trim());
-                    employeeData.put("PhilHealth", details[7].trim());
-                    employeeData.put("TIN", details[8].trim());
-                    employeeData.put("Pagibig", details[9].trim());
-                    employeeData.put("Position", details[12].trim());
-                    employeeData.put("Supervisor", details[13].trim());
-
-                    // Create Employee Entry (only ID, Name, Position shown)
-                    HBox employeeEntry = createEmployeeEntry(
-                            employeeData.get("ID"),
-                            employeeData.get("Name"),
-                            employeeData.get("Position")
+                if (details.length >= 12) {
+                    Employee employee = new Employee(
+                            details[0].trim(),
+                            details[2].trim() + " " + details[1].trim(),
+                            details[12].trim()
                     );
-
-                    employeeEntry.setOnMouseClicked(event -> showEmployeeDetails(employeeData));
-                    employeeListContainer.getChildren().add(employeeEntry);
+                    employees.add(employee);
+                    employeeListContainer.getChildren().add(createEmployeeEntry(employee));
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Error reading CSV file.");
+            System.err.println("❌ Error reading employee data: " + e.getMessage());
         }
     }
 
-    // Create Clickable Employee Entries
-    private HBox createEmployeeEntry(String id, String name, String position) {
-        HBox hbox = new HBox(20);
-        hbox.getStyleClass().add("employee-entry");
+    private HBox createEmployeeEntry(Employee employee) {
+        HBox box = new HBox(10);
+        box.setStyle("-fx-border-color: #1f4a8d; -fx-border-width: 1; -fx-padding: 5;");
 
-        Label idLabel = new Label("ID: " + id);
-        Label nameLabel = new Label("Name: " + name);
-        Label positionLabel = new Label("Position: " + position);
+        box.getChildren().addAll(
+                createLabel(employee.getId(), 80),
+                createLabel(employee.getName(), 200),
+                createLabel(employee.getPosition(), 200)
+        );
 
-        hbox.getChildren().addAll(idLabel, nameLabel, positionLabel);
-        return hbox;
+        box.setOnMouseClicked(event -> showEmployeeDetails(employee));
+        return box;
     }
 
-    // Show Employee Details Page
-    private void showEmployeeDetails(Map<String, String> employeeData) {
+    private Label createLabel(String text, int minWidth) {
+        Label label = new Label(text);
+        label.setMinWidth(minWidth);
+        return label;
+    }
+
+    private void showEmployeeDetails(Employee employee) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("EmployeeDetails.fxml"));
             Parent root = loader.load();
 
             EmployeeDetailsController controller = loader.getController();
             controller.displayEmployeeDetails(
-                    employeeData.get("ID"),
-                    employeeData.get("Name"),
-                    employeeData.getOrDefault("Birthday", "N/A"),
-                    employeeData.getOrDefault("Address", "N/A"),
-                    employeeData.getOrDefault("Phone", "N/A"),
-                    employeeData.getOrDefault("SSS", "N/A"),
-                    employeeData.getOrDefault("PhilHealth", "N/A"),
-                    employeeData.getOrDefault("TIN", "N/A"),
-                    employeeData.getOrDefault("Pagibig", "N/A"),
-                    employeeData.get("Position"),
-                    employeeData.getOrDefault("Supervisor", "N/A")
+                    employee.getId(),
+                    employee.getName(),
+                    "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A",
+                    employee.getPosition(),
+                    "N/A"
             );
 
-            Stage stage = (Stage) scrollPane.getScene().getWindow();
+            Stage stage = (Stage) employeeListContainer.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Error loading EmployeeDetails.fxml");
+            System.err.println("❌ Error loading EmployeeDetails.fxml: " + e.getMessage());
         }
     }
 
-    // Navigation Methods
     @FXML private void handleEmployees(ActionEvent event) throws IOException { switchScene(event, "Employee.fxml"); }
     @FXML private void handleLeaveRequests(ActionEvent event) throws IOException { switchScene(event, "LeaveRequest.fxml"); }
     @FXML private void handleOTRequests(ActionEvent event) throws IOException { switchScene(event, "OTRequest.fxml"); }
     @FXML private void handleTimeStamps(ActionEvent event) throws IOException { switchScene(event, "TimeStamp.fxml"); }
+    @FXML private void handleLogout(ActionEvent event) { switchScene(event, "Login.fxml"); }
 
-    @FXML
-    private void handleLogout(ActionEvent event) {
+    private void switchScene(ActionEvent event, String fxmlFile) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("Login.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
             Parent root = loader.load();
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
+            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            scene = new Scene(root);
+            stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Error loading Login.fxml. Check the file path.");
+            System.err.println("❌ Error loading " + fxmlFile + ": " + e.getMessage());
         }
-    }
-
-    // Scene Switching Logic
-    private void switchScene(ActionEvent event, String fxmlFile) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
-        root = loader.load();
-        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
     }
 }

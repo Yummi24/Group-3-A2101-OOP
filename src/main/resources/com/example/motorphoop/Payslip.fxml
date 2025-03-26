@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.image.Image?>
@@ -118,14 +119,13 @@
                   </Text>
                </children>
             </AnchorPane>
-            <Button fx:id="Calculate" layoutX="578.0" layoutY="73.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="188.0" styleClass="button-edit" stylesheets="@Login.css" text="Calculate" />
-            <Button layoutX="578.0" layoutY="116.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="188.0" styleClass="button-payslip" stylesheets="@Login.css" text="Generate" />
-            <Text layoutX="431.0" layoutY="95.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="status-logged-in" text="days worked :" textAlignment="CENTER" wrappingWidth="118.9814453125">
+            <Button fx:id="generatePayslip" layoutX="569.0" layoutY="73.0" mnemonicParsing="false" onAction="#handleGeneratePayslip" prefHeight="34.0" prefWidth="188.0" styleClass="button-payslip" stylesheets="@Login.css" text="Generate" />
+            <Text fx:id="daysWorkedText" layoutX="431.0" layoutY="95.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="status-logged-in" text="days worked :" textAlignment="CENTER" wrappingWidth="118.9814453125">
                <font>
                   <Font name="Gill Sans MT Bold Italic" size="16.0" />
                </font>
             </Text>
-            <Text layoutX="431.0" layoutY="122.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Hours worked : 24:00:00" textAlignment="CENTER" wrappingWidth="118.9814453125">
+            <Text fx:id="hoursWorkedText" layoutX="431.0" layoutY="129.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Hours worked : 24:00:00" textAlignment="CENTER" wrappingWidth="118.9814453125">
                <font>
                   <Font name="Gill Sans MT Bold Italic" size="16.0" />
                </font>
@@ -147,6 +147,7 @@
                      </content>
                   </ScrollPane>
                </children></AnchorPane>
+            <ComboBox fx:id="monthSelector" layoutX="588.0" layoutY="126.0" prefWidth="150.0" promptText="Month : " />
          </children>
       </AnchorPane>
    </center>

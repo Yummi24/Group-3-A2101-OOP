@@ -2,12 +2,13 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
@@ -101,66 +102,32 @@
                   <Image url="@../../../MotorPH/MOTORPH_LOGO-removebg-preview.png" />
                </image>
             </ImageView>
-            <ScrollPane layoutX="23.0" layoutY="143.0" prefHeight="385.0" prefWidth="751.0">
+            <ScrollPane layoutX="23.0" layoutY="116.0" prefHeight="412.0" prefWidth="751.0">
                <content>
                   <VBox fx:id="EmployeelistContainer" prefHeight="496.0" prefWidth="921.0">
                      <children>
-                        <HBox prefHeight="51.0" prefWidth="587.0" styleClass="employee-entry" stylesheets="@Login.css">
-                           <children>
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="  ID :" wrappingWidth="80.9814453125">
-                                 <font>
-                                    <Font name="Gill Sans MT" size="16.0" />
-                                 </font></Text>
-                              <ImageView fitHeight="53.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true" />
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Name : " wrappingWidth="225.9814453125">
-                                 <font>
-                                    <Font name="Gill Sans MT" size="16.0" />
-                                 </font></Text>
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Position : " wrappingWidth="180.9814453125">
-                                 <font>
-                                    <Font name="Gill Sans MT" size="16.0" />
-                                 </font></Text>
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Status :" wrappingWidth="216.9814453125">
-                                 <font>
-                                    <Font name="Gill Sans MT" size="16.0" />
-                                 </font>
-                              </Text>
-                           </children>
-                        </HBox>
+                        <TableView fx:id="leaveTable" prefHeight="455.0" prefWidth="921.0">
+                          <columns>
+                            <TableColumn fx:id="employeeIDColumn" prefWidth="110.0" text="Employee ID" />
+                            <TableColumn fx:id="nameColumn" prefWidth="140.0" text="Name" />
+                              <TableColumn fx:id="positionColumn" minWidth="0.0" prefWidth="146.0" text="Position" />
+                              <TableColumn fx:id="leaveTypeColumn" prefWidth="160.0" text="Leave Type" />
+                              <TableColumn fx:id="leaveDateColumn" prefWidth="120.0" text="DATE" />
+                              <TableColumn fx:id="statusColumn" prefWidth="112.0" text="Status" />
+                          </columns>
+                        </TableView>
                      </children>
                   </VBox>
                </content>
             </ScrollPane>
-            <HBox layoutX="23.0" layoutY="112.0" prefHeight="24.0" prefWidth="751.0" style="-fx-background-color: #365598; -fx-background-radius: 10PX;">
-               <children>
-                  <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="   ID" wrappingWidth="153.9814453125">
-                     <font>
-                        <Font name="Gill Sans MT" size="20.0" />
-                     </font>
-                  </Text>
-                  <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Name" wrappingWidth="225.9814453125">
-                     <font>
-                        <Font name="Gill Sans MT" size="20.0" />
-                     </font>
-                  </Text>
-                  <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Position" wrappingWidth="176.9814453125">
-                     <font>
-                        <Font name="Gill Sans MT" size="20.0" />
-                     </font>
-                  </Text>
-                  <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Approval" wrappingWidth="80.9814453125">
-                     <font>
-                        <Font name="Gill Sans MT" size="20.0" />
-                     </font>
-                  </Text>
-               </children>
-            </HBox>
             <TextField layoutX="23.0" layoutY="70.0" prefHeight="27.0" prefWidth="235.0" promptText="Search" />
             <ImageView fitHeight="31.0" fitWidth="39.0" layoutX="256.0" layoutY="68.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@MotorPH/magnifying-glass.png" />
                </image>
             </ImageView>
+            <Button fx:id="Approve" layoutX="509.0" layoutY="66.0" mnemonicParsing="false" onAction="#approveRequest" prefWidth="120.0" text="Approve" />
+            <Button fx:id="Decline" layoutX="654.0" layoutY="66.0" mnemonicParsing="false" onAction="#declineRequest" prefHeight="35.0" prefWidth="120.0" text="Decline" />
          </children>
       </AnchorPane>
    </center>
