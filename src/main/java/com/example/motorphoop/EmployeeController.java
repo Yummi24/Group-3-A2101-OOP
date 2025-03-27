@@ -117,11 +117,19 @@ public class EmployeeController {
         }
     }
 
+    public void setEmployeeID(String employeeID) {
+        System.out.println("Employee ID received: " + employeeID);
+        // Store the Employee ID if needed
+    }
+
+
     @FXML private void handleEmployees(ActionEvent event) throws IOException { switchScene(event, "Employee.fxml"); }
     @FXML private void handleLeaveRequests(ActionEvent event) throws IOException { switchScene(event, "LeaveRequest.fxml"); }
     @FXML private void handleOTRequests(ActionEvent event) throws IOException { switchScene(event, "OTRequest.fxml"); }
     @FXML private void handleTimeStamps(ActionEvent event) throws IOException { switchScene(event, "TimeStamp.fxml"); }
     @FXML private void handleLogout(ActionEvent event) { switchScene(event, "Login.fxml"); }
+
+
 
     private void switchScene(ActionEvent event, String fxmlFile) {
         try {
