@@ -109,11 +109,11 @@
                         <TableView fx:id="leaveTable" prefHeight="455.0" prefWidth="921.0">
                           <columns>
                             <TableColumn fx:id="employeeIDColumn" prefWidth="110.0" text="Employee ID" />
-                            <TableColumn fx:id="nameColumn" prefWidth="140.0" text="Name" />
+                            <TableColumn fx:id="nameColumn" prefWidth="200.0" text="Name" />
                               <TableColumn fx:id="positionColumn" minWidth="0.0" prefWidth="146.0" text="Position" />
-                              <TableColumn fx:id="leaveTypeColumn" prefWidth="160.0" text="Leave Type" />
-                              <TableColumn fx:id="leaveDateColumn" prefWidth="120.0" text="DATE" />
-                              <TableColumn fx:id="statusColumn" prefWidth="112.0" text="Status" />
+                              <TableColumn fx:id="leaveTypeColumn" prefWidth="170.0" text="Leave Type" />
+                              <TableColumn fx:id="leaveDateColumn" prefWidth="168.0" text="DATE" />
+                              <TableColumn fx:id="statusColumn" prefWidth="85.0" text="Status" />
                           </columns>
                         </TableView>
                      </children>

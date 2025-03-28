@@ -50,11 +50,10 @@ public class LoginController {
         }
     }
 
-    /**
-     * Reads Users.csv to check login credentials
-     */
+
+
     private String[] authenticateUser(String enteredUsername, String enteredPassword) {
-        String filePath = "src/Users.csv"; // Update path if needed
+        String filePath = "src/Users.csv";
 
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
