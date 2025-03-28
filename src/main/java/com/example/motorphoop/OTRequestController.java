@@ -93,7 +93,7 @@ public class OTRequestController {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
 
-            // Skip the header line
+
             reader.readLine();
 
             while ((line = reader.readLine()) != null) {

@@ -42,9 +42,9 @@ public class LoginController {
         String[] userData = authenticateUser(username, password);
 
         if (userData != null) {
-            String employeeID = userData[0];  // Extract Employee ID
-            String role = userData[1];  // Extract Role
-            switchDashboard(event, employeeID, role);  // Load appropriate dashboard
+            String employeeID = userData[0];
+            String role = userData[1];
+            switchDashboard(event, employeeID, role);
         } else {
             showAlert("Login Failed", "Invalid username or password.");
         }
@@ -83,9 +83,9 @@ public class LoginController {
         return null;
     }
 
-    /**
-     * Switches to Employee or HR dashboard based on role
-     */
+
+
+
     private void switchDashboard(ActionEvent event, String employeeID, String role) {
         String fxmlFile = role.equalsIgnoreCase("HR") ? "Employee.fxml" : "EmployeeDashboard.fxml";
 
@@ -97,7 +97,7 @@ public class LoginController {
             stage.setScene(scene);
             stage.show();
 
-            // Set Employee ID to the correct controller
+
             if (role.equalsIgnoreCase("HR")) {
                 EmployeeController controller = fxmlLoader.getController();
                 controller.setEmployeeID(employeeID);  // ✅ Pass Employee ID to HR
@@ -112,9 +112,7 @@ public class LoginController {
         }
     }
 
-    /**
-     * Displays an alert dialog
-     */
+
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);

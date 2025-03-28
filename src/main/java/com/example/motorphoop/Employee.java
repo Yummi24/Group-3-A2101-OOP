@@ -3,7 +3,7 @@ package com.example.motorphoop;
 public class Employee {
     private String employeeID, lastName, firstName, birthday, address, phoneNumber;
     private String sss, philHealth, tin, pagIbig, status, position, immediateSupervisor;
-    private String basicSalary, riceSubsidy, phoneAllowance, clothingAllowance, grossSemiMonthlyRate, hourlyRate;
+    private double basicSalary, riceSubsidy, phoneAllowance, clothingAllowance, grossSemiMonthlyRate, hourlyRate;
     private String Username, Password, Role;
 
     public Employee(String[] data) {
@@ -20,15 +20,27 @@ public class Employee {
         this.status = data[10].trim();
         this.position = data[11].trim();
         this.immediateSupervisor = data[12].trim();
-        this.basicSalary = data[13].trim();
-        this.riceSubsidy = data[14].trim();
-        this.phoneAllowance = data[15].trim();
-        this.clothingAllowance = data[16].trim();
-        this.grossSemiMonthlyRate = data[17].trim();
-        this.hourlyRate = data[18].trim();
+
+        // Convert numeric values
+        this.basicSalary = parseDouble(data[13]);
+        this.riceSubsidy = parseDouble(data[14]);
+        this.phoneAllowance = parseDouble(data[15]);
+        this.clothingAllowance = parseDouble(data[16]);
+        this.grossSemiMonthlyRate = parseDouble(data[17]);
+        this.hourlyRate = parseDouble(data[18]);
+
         this.Username = data[19].trim();
         this.Password = data[20].trim();
         this.Role = data[21].trim();
+    }
+
+    // Helper method to handle parsing
+    private double parseDouble(String value) {
+        try {
+            return Double.parseDouble(value.trim().replace(",", "")); // Remove commas in case of formatted numbers
+        } catch (NumberFormatException e) {
+            return 0.0; // Default to 0 if parsing fails
+        }
     }
 
     // Getters
@@ -44,12 +56,12 @@ public class Employee {
     public String getStatus() { return status; }
     public String getPosition() { return position; }
     public String getImmediateSupervisor() { return immediateSupervisor; }
-    public String getBasicSalary() { return basicSalary; }
-    public String getRiceSubsidy() { return riceSubsidy; }
-    public String getPhoneAllowance() { return phoneAllowance; }
-    public String getClothingAllowance() { return clothingAllowance; }
-    public String getGrossSemiMonthlyRate() { return grossSemiMonthlyRate; }
-    public String getHourlyRate() { return hourlyRate; }
+    public double getBasicSalary() { return basicSalary; }
+    public double getRiceSubsidy() { return riceSubsidy; }
+    public double getPhoneAllowance() { return phoneAllowance; }
+    public double getClothingAllowance() { return clothingAllowance; }
+    public double getGrossSemiMonthlyRate() { return grossSemiMonthlyRate; }
+    public double getHourlyRate() { return hourlyRate; }
     public String getUsername() { return Username; }
     public String getPassword() { return Password; }
     public String getRole() { return Role; }

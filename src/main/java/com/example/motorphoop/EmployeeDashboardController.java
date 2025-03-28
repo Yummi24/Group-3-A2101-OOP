@@ -17,20 +17,20 @@ import java.util.Optional;
 
 public class EmployeeDashboardController {
 
-    // Profile Pane
+
     @FXML private Label nameLabel, employeeIDLabel, positionLabel, netSalaryLabel, phoneLabel, statusLabel;
     @FXML private Label birthdayLabel, addressLabel, tinLabel, sssLabel, philhealthLabel, pagibigLabel, supervisorLabel;
 
-    // Request Pane
+
     @FXML private AnchorPane profilePane, requestPane;
 
-    // Leave Request Fields
+
     @FXML private DatePicker leaveStartDatePicker, leaveEndDatePicker;
     @FXML private ComboBox<String> leaveTypeComboBox;
     @FXML private TextArea leaveReasonTextArea;
     @FXML private Label leaveStatusLabel;
 
-    // OT Request Fields
+
     @FXML private DatePicker otDatePicker;
     @FXML private ComboBox<String> startTimeComboBox, endTimeComboBox;
     @FXML private TextArea otReasonTextArea;

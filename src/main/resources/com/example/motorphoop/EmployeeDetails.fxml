@@ -97,19 +97,19 @@
                   <Image url="@../../../MotorPH/MOTORPH_LOGO-removebg-preview.png" />
                </image>
             </ImageView>
-            <AnchorPane layoutX="22.0" layoutY="73.0" prefHeight="78.0" prefWidth="396.0" styleClass="employee-entry" stylesheets="@Login.css">
+            <AnchorPane layoutX="22.0" layoutY="73.0" prefHeight="80.0" prefWidth="503.0" styleClass="employee-entry" stylesheets="@Login.css">
                <children>
-                  <Text fx:id="nameLabel" layoutX="14.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name : " wrappingWidth="233.27490234375">
+                  <Text fx:id="nameLabel" layoutX="14.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name : " wrappingWidth="270.27490234375">
                      <font>
                         <Font name="Gill Sans MT Bold Italic" size="16.0" />
                      </font>
                   </Text>
-                  <Text fx:id="positionLabel" layoutX="14.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Position: " wrappingWidth="233.27490234375">
+                  <Text fx:id="positionLabel" layoutX="14.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Position: " wrappingWidth="354.27490234375">
                      <font>
                         <Font name="Gill Sans MT Bold Italic" size="16.0" />
                      </font>
                   </Text>
-                  <Text fx:id="idLabel" layoutX="273.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ID :" wrappingWidth="108.27490234375">
+                  <Text fx:id="idLabel" layoutX="315.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ID :" wrappingWidth="173.27490234375">
                      <font>
                         <Font name="Gill Sans MT Bold Italic" size="16.0" />
                      </font>
@@ -117,16 +117,6 @@
                </children>
             </AnchorPane>
             <Button fx:id="Payslip" layoutX="578.0" layoutY="90.0" mnemonicParsing="false" onAction="#handlePayslip" prefHeight="34.0" prefWidth="188.0" styleClass="button-payslip" stylesheets="@Login.css" text="Payslip" />
-            <Text layoutX="431.0" layoutY="95.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="status-logged-in" text="Status : Logged In" textAlignment="CENTER" wrappingWidth="118.9814453125">
-               <font>
-                  <Font name="Gill Sans MT Bold Italic" size="16.0" />
-               </font>
-            </Text>
-            <Text layoutX="431.0" layoutY="122.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Hours worked : 24:00:00" textAlignment="CENTER" wrappingWidth="118.9814453125">
-               <font>
-                  <Font name="Gill Sans MT Bold Italic" size="16.0" />
-               </font>
-            </Text>
             <AnchorPane layoutX="22.0" layoutY="161.0" prefHeight="32.0" prefWidth="743.0" styleClass="header">
                <children>
                   <Text layoutX="14.0" layoutY="20.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Employee Personal Iformation">

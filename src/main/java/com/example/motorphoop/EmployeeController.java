@@ -32,20 +32,47 @@ public class EmployeeController {
         loadEmployeeData();
     }
 
+
     private static class Employee {
         private final String id;
-        private final String name;
+        private final String lastName;
+        private final String firstName;
+        private final String birthday;
+        private final String address;
+        private final String phone;
+        private final String sss;
+        private final String philhealth;
+        private final String tin;
+        private final String pagibig;
         private final String position;
+        private final String supervisor;
 
-        public Employee(String id, String name, String position) {
-            this.id = id;
-            this.name = name;
-            this.position = position;
+        public Employee(String[] data) {
+            this.id = data[0].trim();
+            this.lastName = data[1].trim();
+            this.firstName = data[2].trim();
+            this.birthday = data[3].trim();
+            this.address = data[4].trim();
+            this.phone = data[5].trim();
+            this.sss = data[6].trim();
+            this.philhealth = data[7].trim();
+            this.tin = data[8].trim();
+            this.pagibig = data[9].trim();
+            this.position = data[10].trim();
+            this.supervisor = data[11].trim();
         }
 
         public String getId() { return id; }
-        public String getName() { return name; }
+        public String getFullName() { return firstName + " " + lastName; }
+        public String getBirthday() { return birthday; }
+        public String getAddress() { return address; }
+        public String getPhone() { return phone; }
+        public String getSss() { return sss; }
+        public String getPhilhealth() { return philhealth; }
+        public String getTin() { return tin; }
+        public String getPagibig() { return pagibig; }
         public String getPosition() { return position; }
+        public String getSupervisor() { return supervisor; }
     }
 
     private void loadEmployeeData() {
@@ -60,12 +87,8 @@ public class EmployeeController {
                 }
 
                 String[] details = line.split(",");
-                if (details.length >= 12) {
-                    Employee employee = new Employee(
-                            details[0].trim(),
-                            details[2].trim() + " " + details[1].trim(),
-                            details[12].trim()
-                    );
+                if (details.length >= 12) { // make sure enough fields
+                    Employee employee = new Employee(details);
                     employees.add(employee);
                     employeeListContainer.getChildren().add(createEmployeeEntry(employee));
                 }
@@ -81,7 +104,7 @@ public class EmployeeController {
 
         box.getChildren().addAll(
                 createLabel(employee.getId(), 80),
-                createLabel(employee.getName(), 200),
+                createLabel(employee.getFullName(), 200),
                 createLabel(employee.getPosition(), 200)
         );
 
@@ -103,10 +126,16 @@ public class EmployeeController {
             EmployeeDetailsController controller = loader.getController();
             controller.displayEmployeeDetails(
                     employee.getId(),
-                    employee.getName(),
-                    "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A",
+                    employee.getFullName(),
+                    employee.getBirthday(),
+                    employee.getAddress(),
+                    employee.getPhone(),
+                    employee.getSss(),
+                    employee.getPhilhealth(),
+                    employee.getTin(),
+                    employee.getPagibig(),
                     employee.getPosition(),
-                    "N/A"
+                    employee.getSupervisor()
             );
 
             Stage stage = (Stage) employeeListContainer.getScene().getWindow();
@@ -117,9 +146,9 @@ public class EmployeeController {
         }
     }
 
+
     public void setEmployeeID(String employeeID) {
         System.out.println("Employee ID received: " + employeeID);
-        // Store the Employee ID if needed
     }
 
 
@@ -128,8 +157,6 @@ public class EmployeeController {
     @FXML private void handleOTRequests(ActionEvent event) throws IOException { switchScene(event, "OTRequest.fxml"); }
     @FXML private void handleTimeStamps(ActionEvent event) throws IOException { switchScene(event, "TimeStamp.fxml"); }
     @FXML private void handleLogout(ActionEvent event) { switchScene(event, "Login.fxml"); }
-
-
 
     private void switchScene(ActionEvent event, String fxmlFile) {
         try {

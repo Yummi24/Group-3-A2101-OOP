@@ -20,7 +20,7 @@ public class LeaveRequestController {
     private Stage stage;
     private Scene scene;
     private Parent root;
-    private static final String CSV_FILE = "src/Leave Request.csv"; // Make sure the path is correct
+    private static final String CSV_FILE = "src/Leave Request.csv";
 
     @FXML
     private Button Employees, LeaveRequest, OTrequest, Timestamp, Logout, Approve, Decline;
@@ -33,7 +33,7 @@ public class LeaveRequestController {
     @FXML
     private TableColumn<LeaveRequest, String> positionColumn;
     @FXML
-    private TableColumn<LeaveRequest, String> leaveDateColumn;  // This will now show merged Start & End Date
+    private TableColumn<LeaveRequest, String> leaveDateColumn;
     @FXML
     private TableColumn<LeaveRequest, String> leaveTypeColumn;
     @FXML
@@ -48,9 +48,9 @@ public class LeaveRequestController {
     @FXML
     public void initialize() {
         employeeIDColumn.setCellValueFactory(new PropertyValueFactory<>("employeeID"));
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("employeeName"));  // ✅ Correct field
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("employeeName"));
         positionColumn.setCellValueFactory(new PropertyValueFactory<>("position"));
-        leaveDateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));  // ✅ Merged Start & End Date
+        leaveDateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
         leaveTypeColumn.setCellValueFactory(new PropertyValueFactory<>("leaveType"));
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
 
@@ -69,20 +69,20 @@ public class LeaveRequestController {
 
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
-            reader.readLine(); // Skip header
+            reader.readLine();
 
             while ((line = reader.readLine()) != null) {
                 String[] data = line.split(",");
 
-                if (data.length >= 7) { // ✅ Ensure correct number of columns
+                if (data.length >= 7) {
                     leaveRequests.add(new LeaveRequest(
-                            data[0],  // Employee ID
-                            data[1],  // Employee Name
-                            data[2],  // Position
-                            data[3],  // Leave Type
-                            data[4],  // Start Date
-                            data[5],  // End Date
-                            data[6]   // Status
+                            data[0],
+                            data[1],
+                            data[2],
+                            data[3],
+                            data[4],
+                            data[5],
+                            data[6]
                     ));
                 } else {
                     System.out.println("⚠️ Skipping invalid row: " + line);
