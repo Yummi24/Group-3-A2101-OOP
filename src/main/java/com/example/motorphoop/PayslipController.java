@@ -6,39 +6,47 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.Node;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class PayslipController implements Initializable {
 
-    @FXML private Text idLabel;
-    @FXML private Text nameLabel;
-    @FXML private Text positionLabel;
+    @FXML private Text idLabel, nameLabel, positionLabel;
     @FXML private ComboBox<String> monthComboBox;
     @FXML private TextArea payslipTextArea;
+    @FXML private Button editButton, saveButton;
 
     private String employeeId;
     private String employeeName;
     private String employeePosition;
+    private String supervisor;
+    private String phoneNumber;
+    private double hourlyRate;
     private double basicSalary;
+    private double riceSubsidy;
+    private double phoneAllowance;
+    private double clothingAllowance;
+    private double grossSemiMonthlyRate;
     private final DecimalFormat df = new DecimalFormat("#,##0.00");
-
+    private static final String CSV_FILE = "src/Employees.csv";
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         populateMonthComboBox();
+        payslipTextArea.setEditable(false);
+        saveButton.setDisable(true);
     }
 
     private void populateMonthComboBox() {
@@ -47,6 +55,7 @@ public class PayslipController implements Initializable {
                 "July", "August", "September", "October", "November", "December"
         );
     }
+
     public void setEmployeeData(String id, String name, String position) {
         this.employeeId = id;
         this.employeeName = name;
@@ -56,28 +65,35 @@ public class PayslipController implements Initializable {
         nameLabel.setText(name);
         positionLabel.setText(position);
 
-        fetchEmployeeSalary();
+        fetchEmployeeDetails();
     }
 
-    private void fetchEmployeeSalary() {
-        String csvFile = "src/Employees.csv";
-        String line;
-        String splitBy = ",";
-
-        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
+    private void fetchEmployeeDetails() {
+        try (BufferedReader br = new BufferedReader(new FileReader(CSV_FILE))) {
+            String line;
             while ((line = br.readLine()) != null) {
-                String[] data = line.split(splitBy);
+                String[] data = line.split(",");
                 if (data.length > 13 && data[0].equals(employeeId)) {
-                    basicSalary = Double.parseDouble(data[13]); // Column 13: Basic Salary
-                    break;
+                    supervisor = data[7];
+                    phoneNumber = data[5];
+                    hourlyRate = Double.parseDouble(data[14]);
+                    basicSalary = Double.parseDouble(data[13]);
+
+
+                    riceSubsidy = (data.length > 16) ? Double.parseDouble(data[16]) : 0.0;
+                    phoneAllowance = (data.length > 17) ? Double.parseDouble(data[17]) : 0.0;
+                    clothingAllowance = (data.length > 18) ? Double.parseDouble(data[18]) : 0.0;
+                    grossSemiMonthlyRate = (data.length > 19) ? Double.parseDouble(data[19]) : 0.0;
+
+
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (NumberFormatException e) {
+            System.err.println("Error parsing number: " + e.getMessage());
         }
     }
-
-
 
     @FXML
     private void generatePayslip() {
@@ -86,27 +102,32 @@ public class PayslipController implements Initializable {
 
         int totalDaysWorked = calculateWeekdays(selectedMonth);
         double totalHoursWorked = totalDaysWorked * 8;
-        double overtimeHours = Math.random() * 20; // Random OT between 0-20 hours
-        double overtimePay = overtimeHours * (basicSalary / 160 * 1.25);
-        double deductions = basicSalary * 0.1; // 10% tax/deductions
-        double netPay = basicSalary - deductions + overtimePay;
-
+        double overtimeHours = Math.random() * 20;
+        double overtimePay = overtimeHours * (hourlyRate * 1.25);
+        double deductions = basicSalary * 0.1;
+        double netPay = basicSalary + riceSubsidy + phoneAllowance + clothingAllowance - deductions + overtimePay;
 
         payslipTextArea.setText(
                 "========== PAYSLIP ==========" +
-                        "\nEmployee ID  : " + employeeId +
-                        "\nName         : " + employeeName +
-                        "\nPosition     : " + employeePosition +
-                        "\nMonth       : " + selectedMonth +
+                        "\nEmployee ID      : " + employeeId +
+                        "\nName             : " + employeeName +
+                        "\nPosition         : " + employeePosition +
+                        "\nSupervisor       : " + supervisor +
+                        "\nPhone Number     : " + phoneNumber +
+                        "\nMonth           : " + selectedMonth +
                         "\n-------------------------------" +
                         "\nTotal Days Worked : " + totalDaysWorked +
                         "\nTotal Hours Worked: " + df.format(totalHoursWorked) +
                         "\n-------------------------------" +
-                        "\nBasic Salary : \u20B1 " + df.format(basicSalary) +
-                        "\nDeductions   : \u20B1 " + df.format(deductions) +
-                        "\nOvertime     : \u20B1 " + df.format(overtimePay) +
+                        "\nBasic Salary      : \u20B1 " + df.format(basicSalary) +
+                        "\nRice Subsidy      : \u20B1 " + df.format(riceSubsidy) +
+                        "\nPhone Allowance   : \u20B1 " + df.format(phoneAllowance) +
+                        "\nClothing Allowance: \u20B1 " + df.format(clothingAllowance) +
+                        "\nGross Semi-Monthly: \u20B1 " + df.format(grossSemiMonthlyRate) +
+                        "\nDeductions        : \u20B1 " + df.format(deductions) +
+                        "\nOvertime          : \u20B1 " + df.format(overtimePay) +
                         "\n-------------------------------" +
-                        "\nNET PAY      : \u20B1 " + df.format(netPay) +
+                        "\nNET PAY           : \u20B1 " + df.format(netPay) +
                         "\n================================"
         );
     }
@@ -140,6 +161,20 @@ public class PayslipController implements Initializable {
             start = start.plusDays(1);
         }
         return weekdays;
+    }
+
+    @FXML
+    private void handleEditPayslip() {
+        Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmationAlert.setTitle("Confirm Edit");
+        confirmationAlert.setHeaderText("Are you sure you want to edit this employee's payslip?");
+        confirmationAlert.setContentText("Changes will be saved to the CSV file.");
+
+        Optional<ButtonType> result = confirmationAlert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            payslipTextArea.setEditable(true);
+            saveButton.setDisable(false);
+        }
     }
 
     @FXML

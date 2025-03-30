@@ -114,6 +114,17 @@ public class OTRequestController {
     private void approveRequest(ActionEvent event) {
         OTRequest selectedRequest = otTable.getSelectionModel().getSelectedItem();
         if (selectedRequest != null) {
+            if (!selectedRequest.getStatus().equals("Pending")) {
+                showWarning("Invalid Action", "This request has already been processed.");
+                return;
+            }
+
+            // Check for schedule conflicts
+            if (isScheduleConflict(selectedRequest)) {
+                showWarning("Schedule Conflict", "This request conflicts with an already approved overtime request.");
+                return;
+            }
+
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Confirm Approval");
             alert.setHeaderText(null);
@@ -130,10 +141,16 @@ public class OTRequestController {
         }
     }
 
+
     @FXML
     private void declineRequest(ActionEvent event) {
         OTRequest selectedRequest = otTable.getSelectionModel().getSelectedItem();
         if (selectedRequest != null) {
+            if (!selectedRequest.getStatus().equals("Pending")) {
+                showWarning("Invalid Action", "This request has already been processed.");
+                return;
+            }
+
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Confirm Decline");
             alert.setHeaderText(null);
@@ -149,6 +166,28 @@ public class OTRequestController {
             showWarning("No Selection", "Please select a request to decline.");
         }
     }
+
+    private boolean isScheduleConflict(OTRequest newRequest) {
+        for (OTRequest existingRequest : otRequests) {
+            if (existingRequest.getStatus().equals("Approved") &&
+                    existingRequest.getOtDate().equals(newRequest.getOtDate())) {
+
+                int existingStart = Integer.parseInt(existingRequest.getStartTime().replace(":", ""));
+                int existingEnd = Integer.parseInt(existingRequest.getEndTime().replace(":", ""));
+                int newStart = Integer.parseInt(newRequest.getStartTime().replace(":", ""));
+                int newEnd = Integer.parseInt(newRequest.getEndTime().replace(":", ""));
+
+                // Check for overlapping time slots
+                if ((newStart >= existingStart && newStart < existingEnd) ||
+                        (newEnd > existingStart && newEnd <= existingEnd) ||
+                        (newStart <= existingStart && newEnd >= existingEnd)) {
+                    return true; // Conflict found
+                }
+            }
+        }
+        return false; // No conflict
+    }
+
 
     private void saveOTRequests() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(CSV_FILE))) {

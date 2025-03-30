@@ -132,11 +132,12 @@
                <children>
                   <ScrollPane layoutX="211.0" layoutY="31.0" prefHeight="332.0" prefWidth="744.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <content>
-                        <TextArea fx:id="payslipTextArea" prefHeight="624.0" prefWidth="698.0" />
+                        <TextArea fx:id="payslipTextArea" prefHeight="624.0" prefWidth="698.0" editable="true"/>
                      </content>
                   </ScrollPane>
                </children></AnchorPane>
             <ComboBox fx:id="monthComboBox" layoutX="588.0" layoutY="126.0" onAction="#generatePayslip" prefWidth="150.0" promptText="Month : " />
+            <Button fx:id="saveButton" layoutX="588.0" layoutY="73.0" mnemonicParsing="false" onAction="#handleEditPayslip" prefHeight="37.0" prefWidth="151.0" text="Edit" />
          </children>
       </AnchorPane>
    </center>

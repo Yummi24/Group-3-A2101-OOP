@@ -11,6 +11,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import java.io.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -97,7 +98,24 @@ public class LeaveRequestController {
     private void approveRequest(ActionEvent event) {
         LeaveRequest selectedRequest = leaveTable.getSelectionModel().getSelectedItem();
         if (selectedRequest != null) {
-            if (showConfirmation("Approve", "Are you sure you want to approve this leave request?")) {
+            if (!selectedRequest.getStatus().equals("Pending")) {
+                showWarning("Invalid Action", "This request has already been processed.");
+                return;
+            }
+
+            // Check for schedule conflicts
+            if (isLeaveConflict(selectedRequest)) {
+                showWarning("Schedule Conflict", "This leave request overlaps with an already approved leave.");
+                return;
+            }
+
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Confirm Approval");
+            alert.setHeaderText(null);
+            alert.setContentText("Are you sure you want to approve this leave request?");
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
                 selectedRequest.setStatus("Approved");
                 saveLeaveRequests();
                 leaveTable.refresh();
@@ -110,7 +128,13 @@ public class LeaveRequestController {
     @FXML
     private void declineRequest(ActionEvent event) {
         LeaveRequest selectedRequest = leaveTable.getSelectionModel().getSelectedItem();
+
         if (selectedRequest != null) {
+            if (!selectedRequest.getStatus().equalsIgnoreCase("Pending")) {  // Prevent re-declining
+                showWarning("Action Denied", "This request has already been processed.");
+                return;
+            }
+
             if (showConfirmation("Decline", "Are you sure you want to decline this leave request?")) {
                 selectedRequest.setStatus("Declined");
                 saveLeaveRequests();
@@ -120,6 +144,26 @@ public class LeaveRequestController {
             showWarning("No Selection", "Please select a request to decline.");
         }
     }
+
+    private boolean isLeaveConflict(LeaveRequest newRequest) {
+        for (LeaveRequest existingRequest : leaveRequests) {
+            if (existingRequest.getStatus().equals("Approved") &&
+                    existingRequest.getEmployeeID().equals(newRequest.getEmployeeID())) {
+
+                LocalDate existingStart = LocalDate.parse(existingRequest.getStartDate());
+                LocalDate existingEnd = LocalDate.parse(existingRequest.getEndDate());
+                LocalDate newStart = LocalDate.parse(newRequest.getStartDate());
+                LocalDate newEnd = LocalDate.parse(newRequest.getEndDate());
+
+                // Check if the date ranges overlap
+                if (!(newEnd.isBefore(existingStart) || newStart.isAfter(existingEnd))) {
+                    return true; // Conflict found
+                }
+            }
+        }
+        return false; // No conflict
+    }
+
 
     private void saveLeaveRequests() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(CSV_FILE))) {

@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 
 import java.io.*;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Optional;
 
@@ -42,6 +43,7 @@ public class EmployeeDashboardController {
         this.loggedInEmployeeID = employeeID;
         loadEmployeeData();
         populateComboBoxes();
+        restrictDatePickers();
         updateRequestStatuses();
     }
 
@@ -59,18 +61,11 @@ public class EmployeeDashboardController {
                 }
 
                 String[] details = line.split(",");
-                if (details.length < 19) {
-                    System.out.println("Skipping invalid line: " + line);
-                    continue;
-                }
+                if (details.length < 19) continue;
 
                 String employeeID = details[0].trim();
                 if (employeeID.equals(loggedInEmployeeID)) {
-                    String lastName = details[1].trim();
-                    String firstName = details[2].trim();
-                    String fullName = firstName + " " + lastName;
-
-                    nameLabel.setText("Name: " + fullName);
+                    nameLabel.setText("Name: " + details[2].trim() + " " + details[1].trim());
                     employeeIDLabel.setText("Employee ID: " + employeeID);
                     positionLabel.setText("Position: " + details[11].trim());
                     netSalaryLabel.setText("Net Salary: " + details[13].trim());
@@ -87,7 +82,7 @@ public class EmployeeDashboardController {
                 }
             }
         } catch (IOException e) {
-            System.err.println("Error loading employee data: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -102,13 +97,66 @@ public class EmployeeDashboardController {
                 "Emergency Leave"
         );
 
-        for (int hour = 0; hour < 24; hour++) {
+        for (int hour = 12; hour <= 16; hour++) {  // 12:00 - 16:00 Only
             for (int min = 0; min < 60; min += 30) {
                 String time = String.format("%02d:%02d", hour, min);
                 startTimeComboBox.getItems().add(time);
                 endTimeComboBox.getItems().add(time);
             }
         }
+    }
+
+    private void restrictDatePickers() {
+        LocalDate today = LocalDate.now();
+        leaveStartDatePicker.setDayCellFactory(picker -> new DateCell() {
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                setDisable(empty || date.isBefore(today));
+            }
+        });
+
+        leaveEndDatePicker.setDayCellFactory(picker -> new DateCell() {
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                setDisable(empty || date.isBefore(today));
+            }
+        });
+
+        otDatePicker.setDayCellFactory(picker -> new DateCell() {
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                setDisable(empty || date.isBefore(today));
+            }
+        });
+    }
+
+    private boolean isDuplicateRequest(String requestDate, String requestType) {
+        String csvFile = requestType.equals("Leave") ? "src/Leave Request.csv" : "src/OT Request.csv";
+
+        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
+            String line;
+            boolean skipHeader = true;
+
+            while ((line = br.readLine()) != null) {
+                if (skipHeader) {
+                    skipHeader = false;
+                    continue;
+                }
+
+                String[] details = line.split(",");
+                if (details.length < 7) continue;
+
+                String employeeID = details[0].trim();
+                String date = requestType.equals("Leave") ? details[5].trim() : details[3].trim();
+
+                if (employeeID.equals(loggedInEmployeeID) && date.equals(requestDate)) {
+                    return true;  // Duplicate found
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;  // No duplicate
     }
 
     @FXML
@@ -121,25 +169,20 @@ public class EmployeeDashboardController {
 
         String startDate = leaveStartDatePicker.getValue().toString();
         String endDate = leaveEndDatePicker.getValue().toString();
-        String leaveType = leaveTypeComboBox.getValue();
-        String reason = leaveReasonTextArea.getText().trim();
-        String status = "Pending";
+
+        // Check if there's already an OT request on the same date
+        if (isDuplicateRequest(startDate, "OT") || isDuplicateRequest(endDate, "OT")) {
+            showAlert(Alert.AlertType.WARNING, "Duplicate Request", "You have already submitted an Overtime request on this date.");
+            return;
+        }
 
         String csvFile = "src/Leave Request.csv";
-
-        File file = new File(csvFile);
-        if (file.exists()) {
-            try (FileWriter fw = new FileWriter(file, true);
-                 BufferedWriter bw = new BufferedWriter(fw);
-                 PrintWriter out = new PrintWriter(bw)) {
-
-                out.println(String.join(",", loggedInEmployeeID, nameLabel.getText().replace("Name: ", ""),
-                        positionLabel.getText().replace("Position: ", ""), leaveType, reason, startDate, endDate, status));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            showAlert(Alert.AlertType.ERROR, "File Not Found", "The file 'Leave Request.csv' does not exist.");
+        try (PrintWriter out = new PrintWriter(new FileWriter(csvFile, true))) {
+            out.println(String.join(",", loggedInEmployeeID, nameLabel.getText().replace("Name: ", ""),
+                    positionLabel.getText().replace("Position: ", ""), leaveTypeComboBox.getValue(),
+                    leaveReasonTextArea.getText().trim(), startDate, endDate, "Pending"));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         leaveStatusLabel.setText("Pending");
@@ -148,6 +191,12 @@ public class EmployeeDashboardController {
 
     @FXML
     private void submitOTRequest() {
+        LocalTime now = LocalTime.now();
+        if (now.isAfter(LocalTime.of(16, 0))) {
+            showAlert(Alert.AlertType.WARNING, "Booking Closed", "OT booking is closed for today. Try again tomorrow.");
+            return;
+        }
+
         if (otDatePicker.getValue() == null || startTimeComboBox.getValue() == null ||
                 endTimeComboBox.getValue() == null || otReasonTextArea.getText().trim().isEmpty()) {
             showAlert(Alert.AlertType.WARNING, "Incomplete Form", "Please fill in all fields.");
@@ -155,39 +204,41 @@ public class EmployeeDashboardController {
         }
 
         String otDate = otDatePicker.getValue().toString();
-        String startTime = startTimeComboBox.getValue();
-        String endTime = endTimeComboBox.getValue();
-        String reason = otReasonTextArea.getText().trim();
-        String status = "Pending";
 
-        long hours = calculateHours(startTime, endTime);
+        // Check if there's already a Leave request on the same date
+        if (isDuplicateRequest(otDate, "Leave")) {
+            showAlert(Alert.AlertType.WARNING, "Duplicate Request", "You have already submitted a Leave request on this date.");
+            return;
+        }
 
         String csvFile = "src/OT Request.csv";
+        long hours = calculateHours(startTimeComboBox.getValue(), endTimeComboBox.getValue());
 
-        File file = new File(csvFile);
-        if (file.exists()) {
-            try (FileWriter fw = new FileWriter(file, true);
-                 BufferedWriter bw = new BufferedWriter(fw);
-                 PrintWriter out = new PrintWriter(bw)) {
-
-                out.println(String.join(",", loggedInEmployeeID, nameLabel.getText().replace("Name: ", ""),
-                        positionLabel.getText().replace("Position: ", ""), otDate, startTime, endTime, String.valueOf(hours), reason, status));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            showAlert(Alert.AlertType.ERROR, "File Not Found", "The file 'OT Request.csv' does not exist.");
+        try (PrintWriter out = new PrintWriter(new FileWriter(csvFile, true))) {
+            out.println(String.join(",", loggedInEmployeeID, nameLabel.getText().replace("Name: ", ""),
+                    positionLabel.getText().replace("Position: ", ""), otDate, startTimeComboBox.getValue(),
+                    endTimeComboBox.getValue(), String.valueOf(hours), otReasonTextArea.getText().trim(), "Pending"));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         otStatusLabel.setText("Pending");
         showAlert(Alert.AlertType.INFORMATION, "Success", "Overtime request submitted successfully.");
     }
 
+
     private long calculateHours(String start, String end) {
-        LocalTime startTime = LocalTime.parse(start);
-        LocalTime endTime = LocalTime.parse(end);
-        return Duration.between(startTime, endTime).toHours();
+        return Duration.between(LocalTime.parse(start), LocalTime.parse(end)).toHours();
     }
+
+    private void showAlert(Alert.AlertType type, String title, String content) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+
 
     private void updateRequestStatuses() {
         leaveStatusLabel.setText(getLatestStatus("src/Leave Request.csv"));
@@ -213,6 +264,8 @@ public class EmployeeDashboardController {
             return "Pending";
         }
     }
+
+
 
     @FXML
     private void handleLogout(ActionEvent event) {
@@ -249,11 +302,4 @@ public class EmployeeDashboardController {
         profilePane.setVisible(true);
     }
 
-    private void showAlert(Alert.AlertType type, String title, String content) {
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
-    }
 }

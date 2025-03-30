@@ -19,3 +19,7 @@ Employee ID,Name,Position,Leave Type,Start Date,End Date,Status
 10018,Allison San Jose,Account Rank and File,Vacation Leave,,2024-06-01,2024-06-07
 10019,Cydney Rosario,Account Rank and File,Emergency Leave,,2024-04-12,2024-04-13
 10002,Antonio Lim,Chief Operating Officer,Sick Leave,Heartache,2025-03-29,Approved
+10002,Antonio Lim,Chief Operating Officer,Casual Leave,SIck Leave,2025-04-02,2026-03-10,Pending
+10002,Antonio Lim,Chief Operating Officer,Casual Leave,SIck Leave,2025-04-02,2026-03-10,Pending
+10002,Antonio Lim,Chief Operating Officer,Maternity Leave,Family,2025-04-01,2025-04-05,Pending
+10002,Antonio Lim,Chief Operating Officer,Maternity Leave,Family,2025-04-01,2025-04-05,Pending
