@@ -229,6 +229,37 @@ public class EmployeeDashboardController {
         }
     }
 
+    @FXML
+    private void submitLeaveRequest() {
+        if (leaveStartDatePicker.getValue() == null || leaveEndDatePicker.getValue() == null ||
+                leaveTypeComboBox.getValue() == null || leaveReasonTextArea.getText().trim().isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Incomplete Form", "Please fill in all fields.");
+            return;
+        }
+
+        String leaveStart = leaveStartDatePicker.getValue().toString();
+        String leaveEnd = leaveEndDatePicker.getValue().toString();
+
+        if (isDuplicateRequest(leaveStart, "Leave")) {
+            showAlert(Alert.AlertType.WARNING, "Duplicate Request", "You have already submitted a leave request on this date.");
+            return;
+        }
+
+        String csvFile = "src/Leave Request.csv";
+
+        try (PrintWriter out = new PrintWriter(new FileWriter(csvFile, true))) {
+            out.println(String.join(",", loggedInEmployeeID, nameLabel.getText().replace("Name: ", ""),
+                    positionLabel.getText().replace("Position: ", ""), leaveTypeComboBox.getValue(),
+                    leaveReasonTextArea.getText().trim(), leaveStart, leaveEnd, "Pending"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        leaveStatusLabel.setText("Pending");
+        showAlert(Alert.AlertType.INFORMATION, "Success", "Leave request submitted successfully.");
+    }
+
+
 
 
     @FXML
