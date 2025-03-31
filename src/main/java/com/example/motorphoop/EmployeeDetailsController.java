@@ -61,7 +61,6 @@ public class EmployeeDetailsController {
         supervisorLabel.setText(supervisor);
     }
 
-
     @FXML
     private void handleEmployees(ActionEvent event) throws IOException {
         switchScene(event, "Employee.fxml");
@@ -131,5 +130,8 @@ public class EmployeeDetailsController {
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
+    }
+
+    public void displayEmployeeDetails(String id, String fullName, String position) {
     }
 }

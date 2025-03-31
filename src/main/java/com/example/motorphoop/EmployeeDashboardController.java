@@ -22,15 +22,12 @@ public class EmployeeDashboardController {
     @FXML private Label nameLabel, employeeIDLabel, positionLabel, netSalaryLabel, phoneLabel, statusLabel;
     @FXML private Label birthdayLabel, addressLabel, tinLabel, sssLabel, philhealthLabel, pagibigLabel, supervisorLabel;
 
-
     @FXML private AnchorPane profilePane, requestPane;
-
 
     @FXML private DatePicker leaveStartDatePicker, leaveEndDatePicker;
     @FXML private ComboBox<String> leaveTypeComboBox;
     @FXML private TextArea leaveReasonTextArea;
     @FXML private Label leaveStatusLabel;
-
 
     @FXML private DatePicker otDatePicker;
     @FXML private ComboBox<String> startTimeComboBox, endTimeComboBox;
@@ -130,6 +127,41 @@ public class EmployeeDashboardController {
         });
     }
 
+    @FXML
+    private void submitOTRequest() {
+        LocalTime now = LocalTime.now();
+        if (now.isAfter(LocalTime.of(16, 0))) {
+            showAlert(Alert.AlertType.WARNING, "Booking Closed", "OT booking is closed for today. Try again tomorrow.");
+            return;
+        }
+
+        if (otDatePicker.getValue() == null || startTimeComboBox.getValue() == null ||
+                endTimeComboBox.getValue() == null || otReasonTextArea.getText().trim().isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Incomplete Form", "Please fill in all fields.");
+            return;
+        }
+
+        String otDate = otDatePicker.getValue().toString();
+        if (isDuplicateRequest(otDate, "OT")) {
+            showAlert(Alert.AlertType.WARNING, "Duplicate Request", "You have already submitted an Overtime request on this date.");
+            return;
+        }
+
+        String csvFile = "src/OT Request.csv";
+        long hours = calculateHours(startTimeComboBox.getValue(), endTimeComboBox.getValue());
+
+        try (PrintWriter out = new PrintWriter(new FileWriter(csvFile, true))) {
+            out.println(String.join(",", loggedInEmployeeID, nameLabel.getText().replace("Name: ", ""),
+                    positionLabel.getText().replace("Position: ", ""), otDate, startTimeComboBox.getValue(),
+                    endTimeComboBox.getValue(), String.valueOf(hours), otReasonTextArea.getText().trim(), "Pending"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        otStatusLabel.setText("Pending");
+        showAlert(Alert.AlertType.INFORMATION, "Success", "Overtime request submitted successfully.");
+    }
+
     private boolean isDuplicateRequest(String requestDate, String requestType) {
         String csvFile = requestType.equals("Leave") ? "src/Leave Request.csv" : "src/OT Request.csv";
 
@@ -150,82 +182,14 @@ public class EmployeeDashboardController {
                 String date = requestType.equals("Leave") ? details[5].trim() : details[3].trim();
 
                 if (employeeID.equals(loggedInEmployeeID) && date.equals(requestDate)) {
-                    return true;  // Duplicate found
+                    return true;
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return false;  // No duplicate
+        return false;
     }
-
-    @FXML
-    private void submitLeaveRequest() {
-        if (leaveStartDatePicker.getValue() == null || leaveEndDatePicker.getValue() == null ||
-                leaveTypeComboBox.getValue() == null || leaveReasonTextArea.getText().trim().isEmpty()) {
-            showAlert(Alert.AlertType.WARNING, "Incomplete Form", "Please fill in all fields.");
-            return;
-        }
-
-        String startDate = leaveStartDatePicker.getValue().toString();
-        String endDate = leaveEndDatePicker.getValue().toString();
-
-        // Check if there's already an OT request on the same date
-        if (isDuplicateRequest(startDate, "OT") || isDuplicateRequest(endDate, "OT")) {
-            showAlert(Alert.AlertType.WARNING, "Duplicate Request", "You have already submitted an Overtime request on this date.");
-            return;
-        }
-
-        String csvFile = "src/Leave Request.csv";
-        try (PrintWriter out = new PrintWriter(new FileWriter(csvFile, true))) {
-            out.println(String.join(",", loggedInEmployeeID, nameLabel.getText().replace("Name: ", ""),
-                    positionLabel.getText().replace("Position: ", ""), leaveTypeComboBox.getValue(),
-                    leaveReasonTextArea.getText().trim(), startDate, endDate, "Pending"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        leaveStatusLabel.setText("Pending");
-        showAlert(Alert.AlertType.INFORMATION, "Success", "Leave request submitted successfully.");
-    }
-
-    @FXML
-    private void submitOTRequest() {
-        LocalTime now = LocalTime.now();
-        if (now.isAfter(LocalTime.of(16, 0))) {
-            showAlert(Alert.AlertType.WARNING, "Booking Closed", "OT booking is closed for today. Try again tomorrow.");
-            return;
-        }
-
-        if (otDatePicker.getValue() == null || startTimeComboBox.getValue() == null ||
-                endTimeComboBox.getValue() == null || otReasonTextArea.getText().trim().isEmpty()) {
-            showAlert(Alert.AlertType.WARNING, "Incomplete Form", "Please fill in all fields.");
-            return;
-        }
-
-        String otDate = otDatePicker.getValue().toString();
-
-        // Check if there's already a Leave request on the same date
-        if (isDuplicateRequest(otDate, "Leave")) {
-            showAlert(Alert.AlertType.WARNING, "Duplicate Request", "You have already submitted a Leave request on this date.");
-            return;
-        }
-
-        String csvFile = "src/OT Request.csv";
-        long hours = calculateHours(startTimeComboBox.getValue(), endTimeComboBox.getValue());
-
-        try (PrintWriter out = new PrintWriter(new FileWriter(csvFile, true))) {
-            out.println(String.join(",", loggedInEmployeeID, nameLabel.getText().replace("Name: ", ""),
-                    positionLabel.getText().replace("Position: ", ""), otDate, startTimeComboBox.getValue(),
-                    endTimeComboBox.getValue(), String.valueOf(hours), otReasonTextArea.getText().trim(), "Pending"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        otStatusLabel.setText("Pending");
-        showAlert(Alert.AlertType.INFORMATION, "Success", "Overtime request submitted successfully.");
-    }
-
 
     private long calculateHours(String start, String end) {
         return Duration.between(LocalTime.parse(start), LocalTime.parse(end)).toHours();

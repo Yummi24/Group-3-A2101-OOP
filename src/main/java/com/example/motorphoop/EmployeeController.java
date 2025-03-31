@@ -6,14 +6,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,14 +22,15 @@ public class EmployeeController {
     private Parent root;
 
     @FXML private VBox employeeListContainer;
+    @FXML private TextField searchField;
 
     private List<Employee> employees = new ArrayList<>();
+    private String employeeID;
 
     @FXML
     public void initialize() {
         loadEmployeeData();
     }
-
 
     private static class Employee {
         private final String id;
@@ -64,6 +63,7 @@ public class EmployeeController {
 
         public String getId() { return id; }
         public String getFullName() { return firstName + " " + lastName; }
+        public String getPosition() { return position; }
         public String getBirthday() { return birthday; }
         public String getAddress() { return address; }
         public String getPhone() { return phone; }
@@ -71,11 +71,17 @@ public class EmployeeController {
         public String getPhilhealth() { return philhealth; }
         public String getTin() { return tin; }
         public String getPagibig() { return pagibig; }
-        public String getPosition() { return position; }
         public String getSupervisor() { return supervisor; }
     }
 
+    public void setEmployeeID(String employeeID) {
+        this.employeeID = employeeID;
+    }
+
     private void loadEmployeeData() {
+        employees.clear();
+        employeeListContainer.getChildren().clear();
+
         try (BufferedReader br = new BufferedReader(new FileReader("src/Employees.csv"))) {
             String line;
             boolean skipHeader = true;
@@ -87,7 +93,7 @@ public class EmployeeController {
                 }
 
                 String[] details = line.split(",");
-                if (details.length >= 12) { // make sure enough fields
+                if (details.length >= 12) {
                     Employee employee = new Employee(details);
                     employees.add(employee);
                     employeeListContainer.getChildren().add(createEmployeeEntry(employee));
@@ -102,20 +108,14 @@ public class EmployeeController {
         HBox box = new HBox(10);
         box.setStyle("-fx-border-color: #1f4a8d; -fx-border-width: 1; -fx-padding: 5;");
 
-        box.getChildren().addAll(
-                createLabel(employee.getId(), 80),
-                createLabel(employee.getFullName(), 200),
-                createLabel(employee.getPosition(), 200)
-        );
+        Label idLabel = createLabel(employee.getId(), 80);
+        Label nameLabel = createLabel(employee.getFullName(), 200);
+        Label positionLabel = createLabel(employee.getPosition(), 200);
 
+        box.getChildren().addAll(idLabel, nameLabel, positionLabel);
         box.setOnMouseClicked(event -> showEmployeeDetails(employee));
-        return box;
-    }
 
-    private Label createLabel(String text, int minWidth) {
-        Label label = new Label(text);
-        label.setMinWidth(minWidth);
-        return label;
+        return box;
     }
 
     private void showEmployeeDetails(Employee employee) {
@@ -123,8 +123,8 @@ public class EmployeeController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("EmployeeDetails.fxml"));
             Parent root = loader.load();
 
-            EmployeeDetailsController controller = loader.getController();
-            controller.displayEmployeeDetails(
+            EmployeeDetailsController detailsController = loader.getController();
+            detailsController.displayEmployeeDetails(
                     employee.getId(),
                     employee.getFullName(),
                     employee.getBirthday(),
@@ -146,11 +146,35 @@ public class EmployeeController {
         }
     }
 
-
-    public void setEmployeeID(String employeeID) {
-        System.out.println("Employee ID received: " + employeeID);
+    private Label createLabel(String text, int minWidth) {
+        Label label = new Label(text);
+        label.setMinWidth(minWidth);
+        return label;
     }
 
+    @FXML
+    private void handleSearch() {
+        String searchText = searchField.getText().trim().toLowerCase();
+        employeeListContainer.getChildren().clear();
+
+        for (Employee employee : employees) {
+            if (employee.getId().toLowerCase().contains(searchText) ||
+                    employee.getFullName().toLowerCase().contains(searchText)) {
+                employeeListContainer.getChildren().add(createEmployeeEntry(employee));
+            }
+        }
+    }
+
+    @FXML
+    private void handleAddEdit(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("Edit.fxml"));
+        Parent root = loader.load();
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
 
     @FXML private void handleEmployees(ActionEvent event) throws IOException { switchScene(event, "Employee.fxml"); }
     @FXML private void handleLeaveRequests(ActionEvent event) throws IOException { switchScene(event, "LeaveRequest.fxml"); }
